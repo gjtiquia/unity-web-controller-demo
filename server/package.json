@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/run.js",
+    "start": "node dist/index.js",
     "build": "bash ./build.sh",
-    "build:compile": "tsup src/main.ts src/run.ts --format cjs,esm --clean",
-    "dev": "npm run build:compile -- --watch --onSuccess \"npm run start\"",
-    "test": "jest"
+    "build:compile": "tsup src/index.ts --format cjs,esm --clean",
+    "dev": "npm run build:compile -- --watch --onSuccess \"npm run start\""
   },
   "author": "gjtiquia",
   "license": "MIT",
