@@ -2,6 +2,8 @@ import path from "path"
 import http from "http"
 import express from "express"
 import ws from "ws"
+import { generateID } from "./utils"
+import { WebSocketMessage } from "./types"
 
 const app = express()
 const PORT = 3000
@@ -11,9 +13,9 @@ const publicFilesPath = path.join(__dirname, "..", "..", "client", "dist")
 app.use(express.static(publicFilesPath))
 
 // Setup Web Socket
-let WSServer = ws.Server;
-let server = http.createServer();
-let wss = new WSServer({
+const WSServer = ws.Server;
+const server = http.createServer();
+const wss = new WSServer({
     server: server,
 
     // https://github.com/websockets/ws?tab=readme-ov-file#websocket-compression
@@ -23,22 +25,34 @@ let wss = new WSServer({
 // Mount Express App on HTTP Server
 server.on('request', app);
 
-// Global variables
-// TODO : Map of client ID => client data ({ws, name})
+type CustomWs = ws & { id: string }
 
 // Listen to WebSocket events
-wss.on('connection', (ws) => {
+wss.on('connection', (ws: CustomWs) => {
 
-    // TODO : Generate ID
-    console.log("Client connected!")
+    ws.id = generateID();
+    console.log(`${ws.id} connected`)
 
-    ws.on('message', (message) => {
-        // TODO : Should be in JSON. expect a field of origin = "unity" | "web-controller" => save "unity" websocket + relay the "web-controller" messages to "unity"
-        console.log(`Message received: ${message}`);
+    ws.on('message', (rawData) => {
+        try {
+            const message: WebSocketMessage = JSON.parse(rawData.toString());
+            console.log(`${ws.id} message:`, message);
+
+            if (message.origin === "unity") {
+                // TODO : if message === connected, save unity ws externally (as an array)
+            }
+
+            if (message.origin === "web-controller") {
+                // TODO : Relay to unity ws
+            }
+        }
+        catch (e: unknown) {
+            console.error(e);
+        }
     });
 
     ws.on('close', () => {
-        console.log('Client disconnected!');
+        console.log(`${ws.id} disconnected`);
     });
 
     ws.on('error', console.error);
