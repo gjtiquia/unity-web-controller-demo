@@ -128,4 +128,5 @@ npm run dev
 - [ ] Simple platformer
 - [ ] OnConnect / OnDisconnect handling
 - [ ] Cache network input
+- [ ] Player name
 - [ ] Update docs
