@@ -120,8 +120,8 @@ npm run dev
 
 - [x] Basic server and client websocket connection.
 - [x] Test ngrok
-- [ ] Assign client ID
-- [ ] Refactor to communicate over JSON
+- [x] Assign client ID
+- [x] Refactor to communicate over JSON
 - [ ] Basic Unity project
 - [ ] Websocket setup in Unity
 - [ ] Test over ngrok
