@@ -31,7 +31,10 @@ public class NetworkingManager : MonoBehaviour
             Debug.Log("NetworkingManager: Received message: " + e.Data);
 
         _ws.Connect();
-        _ws.Send("{\"origin\": \"unity\", \"message\": \"connected\"}"); // TODO : Install Newtonsoft
+
+        var message = new WebSocketMessage("connected");
+        var messageJson = JsonUtility.ToJson(message);
+        _ws.Send(messageJson);
 
         Debug.Log($"NetworkingManager: WebSocket connected. URL: {_webSocketURL}");
     }
@@ -39,5 +42,18 @@ public class NetworkingManager : MonoBehaviour
     private void CloseWebSocket()
     {
         _ws.Close();
+    }
+}
+
+[System.Serializable]
+public class WebSocketMessage
+{
+    public string origin;
+    public string message;
+
+    public WebSocketMessage(string message)
+    {
+        this.origin = "unity";
+        this.message = message;
     }
 }

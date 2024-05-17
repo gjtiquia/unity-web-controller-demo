@@ -3,7 +3,7 @@ import http from "http"
 import express from "express"
 import ws from "ws"
 import { generateID } from "./utils"
-import { WebSocketMessage } from "./types"
+import { RelayMessage, WebSocketMessage } from "./types"
 
 const app = express()
 const PORT = 3000
@@ -25,6 +25,9 @@ const wss = new WSServer({
 // Mount Express App on HTTP Server
 server.on('request', app);
 
+// In-memory variables
+const unityWebSockets: Map<string, ws> = new Map();
+
 type CustomWs = ws & { id: string }
 
 // Listen to WebSocket events
@@ -35,15 +38,21 @@ wss.on('connection', (ws: CustomWs) => {
 
     ws.on('message', (rawData) => {
         try {
-            const message: WebSocketMessage = JSON.parse(rawData.toString());
-            console.log(`${ws.id} message:`, message);
+            const parsedMessage: WebSocketMessage = JSON.parse(rawData.toString());
+            console.log(`${ws.id} message:`, parsedMessage);
 
-            if (message.origin === "unity") {
-                // TODO : if message === connected, save unity ws externally (as an array)
+            // Unity client initialization
+            if (parsedMessage.origin === "unity" && parsedMessage.message === "connected") {
+                unityWebSockets.set(ws.id, ws);
+                console.log(`${ws.id} added to Unity Web Sockets`);
             }
 
-            if (message.origin === "web-controller") {
-                // TODO : Relay to unity ws
+            // Relay message to Unity
+            if (parsedMessage.origin === "web-controller") {
+                unityWebSockets.forEach((unityWebSocket) => {
+                    const relayMessage: RelayMessage = { id: ws.id, message: parsedMessage.message }
+                    unityWebSocket.send(JSON.stringify(relayMessage));
+                })
             }
         }
         catch (e: unknown) {
@@ -54,6 +63,20 @@ wss.on('connection', (ws: CustomWs) => {
 
     ws.on('close', () => {
         console.log(`${ws.id} disconnected`);
+
+        // Unity websocket disconnect handling
+        if (unityWebSockets.has(ws.id)) {
+            unityWebSockets.delete(ws.id);
+            console.log(`${ws.id} removed from Unity Web Sockets`);
+        }
+
+        // Relay disconnnect message to Unity websocket
+        else {
+            unityWebSockets.forEach((unityWebSocket) => {
+                const relayMessage: RelayMessage = { id: ws.id, message: "disconnected" }
+                unityWebSocket.send(JSON.stringify(relayMessage));
+            })
+        }
     });
 
     ws.on('error', console.error);
