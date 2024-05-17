@@ -33,6 +33,8 @@ public class MovementController : MonoBehaviour
 
         // Populate input struct
         input.IsJumpPressed = Input.GetKey(KeyCode.Space);
+        input.IsLeftPressed = Input.GetKey(KeyCode.A);
+        input.IsRightPressed = Input.GetKey(KeyCode.D);
 
         // Save input struct
         _input = input;
@@ -45,6 +47,8 @@ public class MovementController : MonoBehaviour
             _rigidbody.AddForce(_jumpForce * Vector2.up, ForceMode2D.Impulse);
             _isJumping = true;
         }
+
+        // TODO : Left right movement
     }
 
     private void UpdateState()
