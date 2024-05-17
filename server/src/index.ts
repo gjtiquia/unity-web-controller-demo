@@ -48,6 +48,7 @@ wss.on('connection', (ws: CustomWs) => {
         }
         catch (e: unknown) {
             console.error(e);
+            console.error("rawData:", rawData.toString());
         }
     });
 
