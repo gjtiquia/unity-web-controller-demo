@@ -36,7 +36,7 @@ If you do not have Ngrok installed, you may reference their [Quick Start guide t
 
 ### Unity
 
-Ensure you have Unity installed. The project version uses (TODO).
+Ensure you have Unity installed. The Unity Editor version used for this demo is `2022.3.21f1`.
 
 
 ## Commands to run the demo
