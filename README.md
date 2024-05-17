@@ -123,7 +123,9 @@ npm run dev
 - [x] Assign client ID
 - [x] Refactor to communicate over JSON
 - [x] Basic Unity project
-- [ ] Websocket setup in Unity
-- [ ] Test over ngrok
+- [x] Websocket setup in Unity
+- [x] Test over ngrok
 - [ ] Simple platformer
+- [ ] OnConnect / OnDisconnect handling
+- [ ] Cache network input
 - [ ] Update docs
