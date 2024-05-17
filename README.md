@@ -119,7 +119,8 @@ npm run dev
 ## TODO
 
 - [x] Basic server and client websocket connection.
-- [ ] Test ngrok
+- [x] Test ngrok
+- [ ] Assign client ID
 - [ ] Refactor to communicate over JSON
 - [ ] Basic Unity project
 - [ ] Websocket setup in Unity
