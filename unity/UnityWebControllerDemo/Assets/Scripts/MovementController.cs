@@ -1,21 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class MovementController : MonoBehaviour
 {
     // SERIALIZED MEMBERS
+    [Header("Settings")]
     [SerializeField] private float _jumpForce;
 
+    [Header("References")]
+    [SerializeField] private Rigidbody2D _rigidbody;
+    [SerializeField] private NetworkInput _networkInput;
+
     // PRIVATE MEMBERS
-    private Rigidbody2D _rigidbody;
     private MovementInput _input = MovementInput.Create();
     private bool _isJumping = false;
 
     // MonoBehaviour INTERFACE
-    private void Awake()
+    private void OnValidate()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
+        Assert.IsNotNull(_rigidbody);
+        Assert.IsNotNull(_networkInput);
     }
 
     private void FixedUpdate()
@@ -32,7 +38,7 @@ public class MovementController : MonoBehaviour
         var input = MovementInput.Create();
 
         // Populate input struct
-        input.IsJumpPressed = Input.GetKey(KeyCode.Space);
+        input.IsJumpPressed = Input.GetKey(KeyCode.Space) || _networkInput.IsJumpPressed;
         input.IsLeftPressed = Input.GetKey(KeyCode.A);
         input.IsRightPressed = Input.GetKey(KeyCode.D);
 

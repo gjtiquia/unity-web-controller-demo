@@ -25,12 +25,19 @@ socket.onmessage = (message) => {
 };
 
 // Setup buttons
-const buttonElement = document.getElementById("message-button");
-if (!buttonElement) {
-    throw new Error("No element with id 'message-button'!");
+const keyDownButton = document.getElementById("keydown-button");
+const keyUpButton = document.getElementById("keyup-button");
+
+if (!keyUpButton || !keyDownButton) {
+    throw new Error();
 }
 
-buttonElement.addEventListener("click", () => {
-    const message: WebSocketMessage = { origin: "web-controller", message: "button-clicked" };
+keyDownButton.addEventListener("click", () => {
+    const message: WebSocketMessage = { origin: "web-controller", message: "keydown-jump" };
+    socket.send(JSON.stringify(message));
+});
+
+keyUpButton.addEventListener("click", () => {
+    const message: WebSocketMessage = { origin: "web-controller", message: "keyup-jump" };
     socket.send(JSON.stringify(message));
 });
