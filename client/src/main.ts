@@ -13,11 +13,20 @@ if (import.meta.env.MODE === "development") {
 const socketURL = `${webSocketProtocol}://${webSocketHost}/`;
 console.log("Creating socket on url:", socketURL);
 
-let socket = new WebSocket(`${webSocketProtocol}://${webSocketHost}/`);
+const socket = new WebSocket(`${webSocketProtocol}://${webSocketHost}/`);
+
+function sendMessage(text: string) {
+    console.log("sendMessage:", text);
+
+    if (socket.readyState !== WebSocket.OPEN)
+        return;
+
+    const message: WebSocketMessage = { origin: "web-controller", message: text };
+    socket.send(JSON.stringify(message));
+}
 
 socket.onopen = () => {
-    const message: WebSocketMessage = { origin: "web-controller", message: "connected" };
-    socket.send(JSON.stringify(message));
+    sendMessage("connected");
 };
 
 socket.onmessage = (message) => {
@@ -25,19 +34,54 @@ socket.onmessage = (message) => {
 };
 
 // Setup buttons
-const keyDownButton = document.getElementById("keydown-button");
-const keyUpButton = document.getElementById("keyup-button");
+const leftButton = document.getElementById("left-button");
+const rightButton = document.getElementById("right-button");
 
-if (!keyUpButton || !keyDownButton) {
-    throw new Error();
+const fireButton = document.getElementById("fire-button");
+const dashButton = document.getElementById("dash-button");
+const jumpButton = document.getElementById("jump-button");
+
+if (!leftButton || !rightButton || !fireButton || !dashButton || !jumpButton) {
+    throw new Error("Cannot find all buttons!");
 }
 
-keyDownButton.addEventListener("click", () => {
-    const message: WebSocketMessage = { origin: "web-controller", message: "keydown-jump" };
-    socket.send(JSON.stringify(message));
-});
+addEventListeners("left", leftButton);
+addEventListeners("right", rightButton);
 
-keyUpButton.addEventListener("click", () => {
-    const message: WebSocketMessage = { origin: "web-controller", message: "keyup-jump" };
-    socket.send(JSON.stringify(message));
-});
+addEventListeners("fire", fireButton);
+addEventListeners("dash", dashButton);
+addEventListeners("jump", jumpButton);
+
+function addEventListeners(name: string, element: HTMLElement)
+{
+    element.addEventListener("touchstart", () => {
+        // console.log("touchstart")
+        sendMessage(`keydown-${name}`);
+    });
+    
+    element.addEventListener("touchend", () => {
+        // console.log("touchend")
+        sendMessage(`keyup-${name}`);
+    });
+    
+    element.addEventListener("touchcancel", () => {
+        // console.log("touchcancel")
+        sendMessage(`keyup-${name}`);
+    });
+    
+    element.addEventListener("mousedown", () => {
+        // console.log("mousedown")
+        sendMessage(`keydown-${name}`);
+    });
+    
+    element.addEventListener("mouseup", () => {
+        // console.log("mouseup")
+        sendMessage(`keyup-${name}`);
+    });
+    
+    element.addEventListener("mouseleave", () => {
+        // console.log("mouseleave")
+        sendMessage(`keyup-${name}`);
+    });
+}
+

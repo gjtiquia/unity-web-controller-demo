@@ -8,14 +8,23 @@
   <title>Web Controller</title>
 </head>
 
-<body class="bg-blue-950 p-2 flex flex-col h-dvh justify-end gap-4">
+<body class="bg-blue-950 p-2 flex flex-col h-dvh justify-between">
 
-  <div class="flex gap-4">
+  <div class="p-10 flex justify-center items-center">
+    <h1 class="select-none text-xl text-white font-bold">Unity Web Controller Demo</h1>
+  </div>
 
-    <div class="aspect-square size-10 rounded-md bg-slate-200"></div>
+  <div class="flex justify-between items-end">
+    <div class="flex gap-3">
+      <div class="size-[20vw] rounded-md select-none text-xl text-center align-middle leading-[20vw] bg-blue-200 active:bg-blue-400" id="left-button">👈</div>
+      <div class="size-[20vw] rounded-md select-none text-xl text-center align-middle leading-[20vw] bg-blue-200 active:bg-blue-400" id="right-button">👉</div>
+    </div>
 
-    <button id="keydown-button" class="text-white bg-blue bg-blue-800 rounded-md px-4 py-2">Keydown</button>
-    <button id="keyup-button" class="text-white bg-blue bg-blue-800 rounded-md px-4 py-2">Keyup</button>
+    <div class="flex gap-3">
+      <div class="size-[10vw] rounded-md select-none text-xl text-center align-middle leading-[10vw] bg-red-400    active:bg-red-600   " id="fire-button" >🔥</div>
+      <div class="size-[10vw] rounded-md select-none text-xl text-center align-middle leading-[10vw] bg-yellow-400 active:bg-yellow-600" id="dash-button">💨</div>
+      <div class="size-[10vw] rounded-md select-none text-xl text-center align-middle leading-[10vw] bg-green-400  active:bg-green-600 " id="jump-button">⬆</div>
+    </div>
   </div>
 
   <script type="module" src="/src/main.ts"></script>
