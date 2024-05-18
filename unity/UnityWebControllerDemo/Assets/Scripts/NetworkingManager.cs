@@ -27,21 +27,47 @@ public class NetworkingManager : MonoBehaviour
     {
         _ws = new WebSocket(_webSocketURL);
 
+        _ws.OnOpen += (sender, e) =>
+        {
+            var message = new WebSocketMessage("connected");
+            var messageJson = JsonUtility.ToJson(message);
+            _ws.SendAsync(messageJson, completed: (_) =>
+            {
+                Debug.Log($"NetworkingManager: WebSocket opened. Current State: {_ws.ReadyState}");
+            });
+        };
+
+        _ws.OnClose += (sender, e) =>
+        {
+            Debug.Log($"NetworkingManager: Websocket closed. Code: {e.Code}. Reason: {e.Reason}");
+        };
+
         _ws.OnMessage += (sender, e) =>
-            Debug.Log("NetworkingManager: Received message: " + e.Data);
+        {
+            if (e.IsText)
+                Debug.Log("NetworkingManager: Received text message: " + e.Data);
 
-        _ws.Connect();
+            if (e.IsBinary)
+                Debug.Log("NetworkingManage: Received binary message: " + e.RawData.ToString());
+        };
 
-        var message = new WebSocketMessage("connected");
-        var messageJson = JsonUtility.ToJson(message);
-        _ws.Send(messageJson);
+        _ws.OnError += (sender, e) =>
+        {
+            Debug.LogError(e.Message);
+            Debug.LogException(e.Exception);
+        };
 
-        Debug.Log($"NetworkingManager: WebSocket connected. URL: {_webSocketURL}");
+        _ws.ConnectAsync(); // Use async or else the whole main thread will be blocked. Expected state: Connecting.
+        Debug.Log($"NetworkingManager: Connecting web socket to url {_webSocketURL}. Current State: {_ws.ReadyState}");
     }
 
     private void CloseWebSocket()
     {
-        _ws.Close();
+        if (_ws.ReadyState == WebSocketState.Closing || _ws.ReadyState == WebSocketState.Closed)
+            return;
+
+        Debug.Log("NetworkingManager: Closing web socket. Current State: " + _ws.ReadyState);
+        _ws.CloseAsync();
     }
 }
 
