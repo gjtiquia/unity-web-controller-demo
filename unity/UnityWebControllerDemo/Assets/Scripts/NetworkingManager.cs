@@ -45,7 +45,10 @@ public class NetworkingManager : MonoBehaviour
         _ws.OnMessage += (sender, e) =>
         {
             if (e.IsText)
+            {
                 Debug.Log("NetworkingManager: Received text message: " + e.Data);
+                OnTextMessageReceived(e.Data);
+            }
 
             if (e.IsBinary)
                 Debug.Log("NetworkingManage: Received binary message: " + e.RawData.ToString());
@@ -69,6 +72,13 @@ public class NetworkingManager : MonoBehaviour
         Debug.Log("NetworkingManager: Closing web socket. Current State: " + _ws.ReadyState);
         _ws.CloseAsync();
     }
+
+    private void OnTextMessageReceived(string textMessage)
+    {
+        var parsedMessage = JsonUtility.FromJson<RelayMessage>(textMessage);
+
+        Debug.Log($"NetworkingManager: Parsed text message: id: {parsedMessage.id}, message: {parsedMessage.message}");
+    }
 }
 
 [System.Serializable]
@@ -82,4 +92,11 @@ public class WebSocketMessage
         this.origin = "unity";
         this.message = message;
     }
+}
+
+[System.Serializable]
+public class RelayMessage
+{
+    public string id;
+    public string message;
 }
