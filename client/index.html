@@ -8,11 +8,15 @@
   <title>Web Controller</title>
 </head>
 
-<body>
-  <h1>Client</h1>
+<body class="bg-blue-950 p-2 flex flex-col h-dvh justify-end gap-4">
 
-  <button id="keydown-button">Keydown</button>
-  <button id="keyup-button">Keyup</button>
+  <div class="flex gap-4">
+
+    <div class="aspect-square size-10 rounded-md bg-slate-200"></div>
+
+    <button id="keydown-button" class="text-white bg-blue bg-blue-800 rounded-md px-4 py-2">Keydown</button>
+    <button id="keyup-button" class="text-white bg-blue bg-blue-800 rounded-md px-4 py-2">Keyup</button>
+  </div>
 
   <script type="module" src="/src/main.ts"></script>
 </body>
