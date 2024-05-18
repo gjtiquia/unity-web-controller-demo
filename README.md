@@ -125,8 +125,8 @@ npm run dev
 - [x] Basic Unity project
 - [x] Websocket setup in Unity
 - [x] Test over ngrok
-- [ ] Simple platformer
-- [ ] OnConnect / OnDisconnect handling
-- [ ] Cache network input
+- [x] Simple platformer
+- [x] OnConnect / OnDisconnect handling
+- [x] Cache network input
 - [ ] Player name
 - [ ] Update docs
