@@ -52,33 +52,48 @@ addEventListeners("fire", fireButton);
 addEventListeners("dash", dashButton);
 addEventListeners("jump", jumpButton);
 
-function addEventListeners(name: string, element: HTMLElement)
-{
+function addEventListeners(name: string, element: HTMLElement) {
+
+    /* Note
+
+    The experience is not that smooth on mobile. 
+    Some "keyup" events are lost and not always registered.
+
+    There is also no native "touchleave" event.
+
+    "touchleave" would need to be manually implemented by checking coordinates.
+
+    References
+    - https://stackoverflow.com/questions/5748476/javascript-equivalent-of-mouseleave-for-touch-interactions
+    - https://stackoverflow.com/questions/9266322/how-to-detect-touch-move-out-of-a-node-with-javascript
+
+    */
+
     element.addEventListener("touchstart", () => {
         // console.log("touchstart")
         sendMessage(`keydown-${name}`);
     });
-    
+
     element.addEventListener("touchend", () => {
         // console.log("touchend")
         sendMessage(`keyup-${name}`);
     });
-    
+
     element.addEventListener("touchcancel", () => {
         // console.log("touchcancel")
         sendMessage(`keyup-${name}`);
     });
-    
+
     element.addEventListener("mousedown", () => {
         // console.log("mousedown")
         sendMessage(`keydown-${name}`);
     });
-    
+
     element.addEventListener("mouseup", () => {
         // console.log("mouseup")
         sendMessage(`keyup-${name}`);
     });
-    
+
     element.addEventListener("mouseleave", () => {
         // console.log("mouseleave")
         sendMessage(`keyup-${name}`);

@@ -5,6 +5,8 @@ using UnityEngine.Assertions;
 public class NetworkInput : MonoBehaviour
 {
     // PUBLIC GETTERS
+    public bool IsLeftPressed { get; private set; } = false;
+    public bool IsRightPressed { get; private set; } = false;
     public bool IsJumpPressed { get; private set; } = false;
 
     // SERIALIZED MEMBERS
@@ -33,6 +35,12 @@ public class NetworkInput : MonoBehaviour
 
         switch (message)
         {
+            case "keydown-left": IsLeftPressed = true; break;
+            case "keyup-left": IsLeftPressed = false; break;
+
+            case "keydown-right": IsRightPressed = true; break;
+            case "keyup-right": IsRightPressed = false; break;
+
             case "keydown-jump": IsJumpPressed = true; break;
             case "keyup-jump": IsJumpPressed = false; break;
         }

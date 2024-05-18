@@ -7,6 +7,7 @@ public class MovementController : MonoBehaviour
 {
     // SERIALIZED MEMBERS
     [Header("Settings")]
+    [SerializeField] private float _movementVelocity;
     [SerializeField] private float _jumpForce;
 
     [Header("References")]
@@ -38,9 +39,9 @@ public class MovementController : MonoBehaviour
         var input = MovementInput.Create();
 
         // Populate input struct
+        input.IsLeftPressed = Input.GetKey(KeyCode.A) || _networkInput.IsLeftPressed;
+        input.IsRightPressed = Input.GetKey(KeyCode.D) || _networkInput.IsRightPressed;
         input.IsJumpPressed = Input.GetKey(KeyCode.Space) || _networkInput.IsJumpPressed;
-        input.IsLeftPressed = Input.GetKey(KeyCode.A);
-        input.IsRightPressed = Input.GetKey(KeyCode.D);
 
         // Save input struct
         _input = input;
@@ -48,13 +49,28 @@ public class MovementController : MonoBehaviour
 
     private void ApplyForces()
     {
+        // Jump
         if (_input.IsJumpPressed && !_isJumping)
         {
             _rigidbody.AddForce(_jumpForce * Vector2.up, ForceMode2D.Impulse);
             _isJumping = true;
         }
 
-        // TODO : Left right movement
+        // Move Right
+        if (!_input.IsLeftPressed && _input.IsRightPressed)
+        {
+            var velocity = _rigidbody.velocity;
+            velocity.x = _movementVelocity;
+            _rigidbody.velocity = velocity;
+        }
+
+        // Move Left
+        if (_input.IsLeftPressed && !_input.IsRightPressed)
+        {
+            var velocity = _rigidbody.velocity;
+            velocity.x = -1f * _movementVelocity;
+            _rigidbody.velocity = velocity;
+        }
     }
 
     private void UpdateState()
