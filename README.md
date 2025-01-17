@@ -130,3 +130,7 @@ npm run dev
 - [x] Cache network input
 - [ ] Player name
 - [ ] Update docs
+
+## Known Issues
+
+- The experience is not that smooth on mobile. Buttons can get "stuck" because "touch up" events are not natively supported on browsers. See [Issue #1](https://github.com/gjtiquia/unity-web-controller-demo/issues/1). Pull requests are welcome!
